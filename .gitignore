@@ -5,4 +5,6 @@
 .vscode/ipch
 lib/
 test/
-.DS_Store/
+.DS_Store
+*.zip
+*.bak
