@@ -5,3 +5,4 @@
 .vscode/ipch
 lib/
 test/
+.DS_Store/
