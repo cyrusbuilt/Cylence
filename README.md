@@ -1,2 +1,8 @@
 # Cylence
+[![Build Status](https://github.com/cyrusbuilt/Cylence/actions/workflows/ci.yml/badge.svg)](https://github.com/cyrusbuilt/Cylence/actions?query=workflows%3APlatformIO)
+
 IoT doorbell killswitch (ESP8266 Arduino - Based)
+
+## Synopsis
+
+I have dogs. LOUD dogs. Also, I work from home. Whenever someone comes to my door and rings my doorbell, my dogs go absolutely bonkers and bark their faces off. I've tried training them not to, but to no avail. The problem is, every time I'm in a meeting or a call and my dogs start barking their faces off, it's difficult to get them to stop. So I decided I needed a way to temporarily *mute* my door bell. A sort of "killswitch", if you will. Seems simple enough... Just put a toggle switch or light switch betwen in the power source and the bell transformer. But my bell transformer is in the basement. And what if I forget to turn it back on? Like so many of my IoT projects, I decided it would be a lot cooler if I could just do it from my phone, integrate it with the rest of my home automation system and have alerts to let me know if I forgot to turn it back on. So, I decided to design a simple PCB around an ESP8266 and a relay and then integrate it with [OpenHAB](https://www.openhab.org) and [RedQueen](https://github.com/cyrusbuilt/RedQueen) using [MQTT](https://mqtt.org/). When the Cylence is 'active' it closes the relay (wired to Normally-Closed) which disconnects the power to the bell transformer. Then deactivating shuts off the relay allowing the circuit to close again and power the door bell back up. Easy peasy.

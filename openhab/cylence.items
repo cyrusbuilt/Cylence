@@ -1,0 +1,8 @@
+String CylenceSystemID "System ID: [%s]" <keyring> { channel="mqtt:topic:mosquitto:cylence:SysID" }
+String CylenceVersion "Firmware version: [%s]" { channel="mqtt:topic:mosquitto:cylence:Version" }
+Number CylenceState <status> { channel="mqtt:topic:mosquitto:cylence:SysState" }
+String CylenceSystemCommand "Actions" <switch>
+
+String CylenceSilencerState "Silencer State: [%s]" <soundvolume_mute> { channel="mqtt:topic:mosquitto:cylence:ActiveState" }
+String CylenceLastUpdate "Last update: " <time> { channel="mqtt:topic:mosquitto:cylence:LastUpdate" }
+Switch CylenceActivate "Silence" <wallswitch> { channel="mqtt:topic:mosquitto:cylence:Activator" }

@@ -1,0 +1,62 @@
+var Timer cylenceTimer = null
+val String fileName = "cylence.rules"
+val String controlTopic = "cylence/control"
+val String cylenceAlertMessage = "Cylence has been active for ~30 minutes!"
+val int notifyDelay = 30
+val actionsBroker = getActions("mqtt", "mqtt:broker:mosquitto")
+
+// NOTE: Commands are taken from TelemetryHelper.h
+
+rule "CylenceRecCmdON"
+when
+	Item CylenceActivate received command
+then
+	logInfo(fileName, "Cylence received command: " + receivedCommand)
+	if (receivedCommand === ON) {
+		val String ctrlMsg = "{\"clientId\":\"cylence\",\"command\":4}"
+		logInfo(fileName, "Publishing MQTT payload " + ctrlMsg + " to topic: " + controlTopic)
+		actionsBroker.publishMQTT(controlTopic, ctrlMsg)
+		CylenceActivate.postUpdate(NULL)
+	}
+end
+
+rule "CylenceActions"
+when
+	Item CylenceSystemCommand received command
+then
+	val String cmd = receivedCommand.toString()
+	logInfo(fileName, "Got action: " + cmd)
+
+	val String cmdString = "{\"clientId\":\"cylence\",\"command\":" + cmd + "}"
+
+	logInfo(fileName, "Publishing MQTT payload " + cmdString + " to topic: " + controlTopic)
+	actionsBroker.publishMQTT(controlTopic, cmdString)
+	CylenceSystemCommand.postUpdate(NULL)
+end
+
+rule "CylenceActive_30"
+when
+	System started or Item CylenceSilencerState changed
+then
+	// If the silence is active and we haven't already started the timer,
+	// then start a new one and alert in 30 min if the silencer is still
+	// active. Otherwise, kill any existing timer.
+	if (CylenceSilencerState.state === ON) {
+		logInfo(fileName, "Cylence is still active!");
+		if (cylenceTimer === null) {
+			cylenceTimer = createTimer(now.plusMinutes(notifyDelay), [|
+				logInfo(fileName, cylenceAlertMessage)
+				sendBroadcastNotification(cylenceAlertMessage)
+			])
+		}
+		else {
+			logInfo(fileName, "Status Timer rescheduled")
+			cylenceTimer.reschedule(now.plusMinutes(notifyDelay))
+		}
+	}
+	else {
+		logInfo(fileName, "Cylence is disabled.")
+		cylenceTimer?.cancel()
+		cylenceTimer = null
+	}
+end

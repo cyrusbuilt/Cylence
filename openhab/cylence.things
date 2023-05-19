@@ -1,0 +1,9 @@
+Thing mqtt:topic:mosquitto:cylence "MQTT Thing Cylence" (mqtt:broker:mosquitto) @ "Cylence" {
+	Channels:
+		Type switch : Activator [commandTopic="cylence/control"]
+		Type string : Version [stateTopic="cylence/status", transformationPattern="JSONPATH:$.firmwareVersion"]
+		Type number : SysState [stateTopic="cylence/status", transformationPattern="JSONPATH:$.systemState"]
+		Type string : SysID [stateTopic="cylence/status", transformationPattern="JSONPATH:$.clientId"]
+		Type string : ActiveState [stateTopic="cylence/status", transformationPattern="JSONPATH:$.silencerState"]
+		Type string : LastUpdate [stateTopic="cylence/status", transformationPattern="JSONPATH:$.lastUpdate"]
+}

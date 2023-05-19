@@ -14,7 +14,8 @@ enum class ControlCommand: uint8_t {
 	DISABLE = 0,
 	ENABLE = 1,
 	REBOOT = 2,
-	REQUEST_STATUS = 3
+	REQUEST_STATUS = 3,
+	ACTIVATE = 4
 };
 
 class TelemetryHelper
